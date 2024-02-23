@@ -27,6 +27,8 @@
 #define CBL_EN_R_W_PROTECT_CMD			0x17
 #define CBL_MEM_READ_CMD						0x18
 #define CBL_READ_SECTOR_STATUS_CMD	0x19
+#define CBL_OTP_READ_CMD						0x20
+#define CBL_CHANGE_ROP_LEVEL_CMD		0x21
 
 
 #define BL_VENDOR_ID								0x15
@@ -40,8 +42,26 @@
 #define BL_ACK											0xCD
 #define BL_NACK											0xAB
 
+/*	naming conventions for verifying address received from host	*/
+#define ADDRESS_VERIFIED						1
+#define ADDRESS_VERIFAILED					0
+
+#define ADD_FLASH_START							0x08000000
+#define ADD_FLASH_END               0x080FFFFF
+#define ADD_CCM_START               0x10000000
+#define ADD_CCM_END                 0x1000FFFF
+#define ADD_SRAM16KB_START          0x2001C000
+#define ADD_SRAM16KB_END            0x2001FFFF
+#define ADD_SRAM112KB_START         0x20000000
+#define ADD_SRAM112KB_END           0x2001BFFF
+#define THUMB_INSTRUCTION_ADDITIVE	0x01
+typedef void (*jumpToAddressFunction)(void);
+
+
 /*	MACRO to enable or disable debugging prints 	*/
 #define BootLoader_Debugging				BootLoader_Debugging
+/*	MACRO to enable or disable red LED Status Debugging	*/
+#define BootLoader_LED_STATUS_Debugging				BootLoader_LED_STATUS_Debugging
 
 /* HW modules assigned to the bootloader	*/
 #define BL_HOST_COMM_UART 					&huart2	
@@ -57,6 +77,10 @@ typedef enum{
 	BL_ERROR,
 }BL_StatusTypeDef;
 
+/*	Address for Identication Data Address	*/
+#define DBGMCU_IDCODE			      		((*((volatile uint32_t*)0xE0042000)))   
+/*	ID Code for this Device is 	*/	
+#define ID_CODE											((uint16_t)(DBGMCU_IDCODE & 0x00000FFF))
 
 /* Macro Functions------------------------------------------------------------*/
 
@@ -66,6 +90,7 @@ typedef enum{
 BL_StatusTypeDef bootloader_Debug_Display(char* str, ...);
 BL_StatusTypeDef bootloader_Receive_From_Host(void);
 
+void jump_To_Application(void);
 
 /* Static Function Declarations ----------------------------------------------*/
 

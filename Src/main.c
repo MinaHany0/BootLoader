@@ -59,6 +59,35 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void jump_To_Application(void)
+{
+	
+	/*	address of main stack pointer in sector 2 of flash	*/
+	uint32_t application_MSP = (*((volatile uint32_t *)0x08008000));
+	
+	/*	address of reset handler in sector 2 of flash	*/
+	uint32_t application_Reset_Handler = (*((volatile uint32_t *)0x08008004));
+	
+	/*	de-Init all modules to have them in initial state before starting application	(especially RCC)	*/
+	HAL_GPIO_DeInit(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15);
+	HAL_CRC_DeInit(&hcrc);
+	HAL_UART_DeInit(&huart2);
+	HAL_UART_DeInit(&huart3);
+	HAL_RCC_DeInit();
+	
+	/*	using CMSIS function set MSP to the MSP address of applcation	*/
+	__set_MSP(application_MSP);
+	
+	/*	make a pointer to function to jump to application	*/
+	typedef void(*ptrToFun)(void);
+	ptrToFun application = (ptrToFun)application_Reset_Handler;
+	
+	/*	BYE	*/
+	application();
+	
+}
+
 HAL_StatusTypeDef uartStatus = HAL_ERROR;
 /* USER CODE END 0 */
 
@@ -111,13 +140,13 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		
-		
-		LED_Turn_Off(LED_BLUE | LED_ORANGE | LED_RED);
+	
+		//LED_Turn_Off(LED_BLUE | LED_ORANGE);
 		LED_Turn_On(LED_GREEN);
 		blStatus |= bootloader_Receive_From_Host();
 		LED_Turn_Off(LED_GREEN);
 		HAL_Delay(1000);
+		
   }
   /* USER CODE END 3 */
 }
