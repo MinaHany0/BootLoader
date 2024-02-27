@@ -88,6 +88,18 @@ void jump_To_Application(void)
 	
 }
 
+
+
+FILE __stdout;
+FILE __stdin;
+
+int fputc(int ch, FILE *f)
+{
+  ITM_SendChar(ch);
+  return(ch);
+}
+
+
 HAL_StatusTypeDef uartStatus = HAL_ERROR;
 /* USER CODE END 0 */
 
@@ -131,8 +143,8 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	
-#ifdef BootLoader_Debugging
-	blStatus |= bootloader_Debug_Display("Bootloader Initializing Done!\r\n");
+#ifdef SWO_DEBUGGING
+	printf("\r\nBootloader Initializing Done!\r\n");
 #endif
   while (1)
   {
@@ -141,11 +153,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	
-		//LED_Turn_Off(LED_BLUE | LED_ORANGE);
 		LED_Turn_On(LED_GREEN);
 		blStatus |= bootloader_Receive_From_Host();
-		LED_Turn_Off(LED_GREEN);
-		HAL_Delay(1000);
+		
+		
 		
   }
   /* USER CODE END 3 */

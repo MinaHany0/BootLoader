@@ -57,9 +57,24 @@
 #define THUMB_INSTRUCTION_ADDITIVE	0x01
 typedef void (*jumpToAddressFunction)(void);
 
+/*	naming conventions for erasing the flash function	*/
+#define SECTORS_VALIDATED						0x01
+#define SECTORS_NOT_VALIDATED				0x00
+#define ERASE_OK										0xFFFFFFFFU
+#define MASS_ERASE_TRUE							0x01
+#define MASS_ERASE_FALSE						0x00
+
+
+/*	naming conventions for writing the flash function	*/
+#define OVERWRITE_POSITIVE					0x01
+#define OVERWRITE_NEGATIVE					0x00
+#define WRITING_FAILURE							0x00
+#define WRITING_SUCCESS							0x01
+#define SECTOR2_START_ADDRESS				0x08008000						
 
 /*	MACRO to enable or disable debugging prints 	*/
 #define BootLoader_Debugging				BootLoader_Debugging
+#define SWO_DEBUGGING								SWO_DEBUGGING
 /*	MACRO to enable or disable red LED Status Debugging	*/
 #define BootLoader_LED_STATUS_Debugging				BootLoader_LED_STATUS_Debugging
 
@@ -69,7 +84,7 @@ typedef void (*jumpToAddressFunction)(void);
 #define BL_CRC &hcrc	
 
 /*	MACRO for size of host buffer	*/
-#define HOST_BUFFER_LEN							100
+#define HOST_BUFFER_LEN							300
 
 /*	typedef for BootLoader error status	*/
 typedef enum{	

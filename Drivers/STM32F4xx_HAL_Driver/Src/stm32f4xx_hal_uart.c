@@ -1223,7 +1223,6 @@ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, ui
   uint8_t  *pdata8bits;
   uint16_t *pdata16bits;
   uint32_t tickstart = 0U;
-
   /* Check that a Rx process is not already ongoing */
   if (huart->RxState == HAL_UART_STATE_READY)
   {
